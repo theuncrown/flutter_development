@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/widgets/transaction_list.dart';
-import './widgets/new_transaction.dart';
+import './widgets/chart.dart';
 import './widgets/transaction_list.dart';
+import './widgets/new_transaction.dart';
 import './models/transaction.dart';
 
 void main() => runApp(MyApp());
@@ -14,12 +14,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
+        errorColor: Colors.red,
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
               headline6: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18),
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              button: TextStyle(color: Colors.white),
             ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
@@ -48,15 +51,34 @@ class _MyHomePageState extends State<MyHomePage> {
     //     id: 't2', title: 'New Bag', amount: 19.20, date: DateTime.now()),
   ];
 
-  void addNewTransaction(String transTitle, double transAmount) {
+  List<Transaction> get recentTrans {
+    return transaction.where((element) {
+      return element.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+
+  void addNewTransaction(
+      String transTitle, double transAmount, DateTime selectedDate) {
     final newTrans = Transaction(
         id: DateTime.now().toString(),
         title: transTitle,
         amount: transAmount,
-        date: DateTime.now());
+        date: selectedDate);
 
     setState(() {
       transaction.add(newTrans);
+    });
+  }
+
+  void deleteTransaction(String id) {
+    setState(() {
+      transaction.removeWhere((element) {
+        return element.id == id;
+      });
     });
   }
 
@@ -91,15 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('Chart!'),
-                elevation: 5,
-              ),
-            ),
-            TransactionList(transaction),
+            //Chart(recentTrans),
+            TransactionList(transaction, deleteTransaction),
           ],
         ),
       ),
