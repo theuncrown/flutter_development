@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import './chart_bar.dart';
+import '../models/transaction.dart';
+import 'package:intl/intl.dart';
+
+class Chart extends StatelessWidget {
+  final List<Transaction> transaction;
+
+  Chart(this.transaction);
+
+  List<Map<String, Object>> get groupTransactionValues {
+    return List.generate(7, (index) {
+      var weekday = DateTime.now().subtract(Duration(days: index));
+      double total = 0.0;
+
+      for (var i = 0; i < transaction.length; i++) {
+        if (transaction[i].date.day == weekday.day &&
+            transaction[i].date.month == weekday.month &&
+            transaction[i].date.year == weekday.year) {
+          total += transaction[i].amount;
+        }
+      }
+
+      return {
+        'day': DateFormat.E().format(weekday).substring(0, 3),
+        'amount': total
+      };
+    }).reversed.toList();
+  }
+
+  double get totalSpending {
+    return groupTransactionValues.fold(0.0, (sum, item) {
+      return sum + item['amount'];
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 6,
+      margin: EdgeInsets.all(20),
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: groupTransactionValues.map((data) {
+            return Flexible(
+              fit: FlexFit.tight,
+              child: ChartBar(
+                  data['day'],
+                  data['amount'],
+                  totalSpending == 0.0
+                      ? 0.0
+                      : (data['amount'] as double) / totalSpending),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
