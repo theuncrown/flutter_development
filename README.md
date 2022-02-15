@@ -1,6 +1,12 @@
 # flutter_development
 
-A new Flutter project.
+This is my personal project while learning flutter.
+Feel free to use/download the code.
+
+## List of Project
+
+- Personal Expenses
+- Meal App (Working on it)
 
 ## Getting Started
 
