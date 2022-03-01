@@ -6,7 +6,8 @@ Feel free to use/download the code.
 ## List of Project
 
 - Personal Expenses
-- Meal App (Working on it)
+- Meal App 
+- Shop App (work in progress)
 
 ## Getting Started
 
