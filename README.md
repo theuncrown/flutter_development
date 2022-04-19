@@ -11,4 +11,5 @@ Feel free to use/download the code.
 
 ## Prerequisites
 - Flutter (I use the LTS 2.10.3 version)
+- Firebase
 - Visual Studio Code
